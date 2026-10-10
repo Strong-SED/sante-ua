@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <title>Assiette Nette</title>
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --title: #0f3d3e;
+                --text: #26343a;
+                --bg: #f7faf8;
+                --alt: #e3f1ec;
+                --pri: #177a5f;
+                --bad: #d64545;
+                --warn: #f2a33a;
+                --card: #fff;
+                --onp: #fff;
+                box-sizing: border-box;
+                padding-top: env(safe-area-inset-top, 0px);
+                padding-bottom: env(safe-area-inset-bottom, 0px);
+            }
+            @media (prefers-color-scheme: dark) {
+                :root:not([data-theme="light"]) {
+                    --title: #bfe6da;
+                    --text: #d5e0dc;
+                    --bg: #0e1a1b;
+                    --alt: #16292a;
+                    --pri: #2fae8a;
+                    --card: #132324;
+                    --onp: #06201a;
+                }
+            }
+            :root[data-theme="dark"] {
+                --title: #bfe6da;
+                --text: #d5e0dc;
+                --bg: #0e1a1b;
+                --alt: #16292a;
+                --pri: #2fae8a;
+                --card: #132324;
+                --onp: #06201a;
+            }
+            html {
+                scroll-padding-top: env(safe-area-inset-top, 0px);
+            }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                background: var(--bg);
+                color: var(--text);
+                font:
+                    16px/1.6 Inter,
+                    system-ui,
+                    sans-serif;
+            }
+            .wrap {
+                max-width: 1040px;
+                margin: 0 auto;
+                padding: 0 20px 48px;
+            }
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                padding: 18px 0;
+            }
+            .logo {
+                font:
+                    500 22px Fraunces,
+                    Georgia,
+                    serif;
+                color: var(--title);
+                cursor: pointer;
+            }
+            .logo b {
+                color: var(--pri);
+                font-weight: 500;
+            }
+            .steps {
+                display: flex;
+                gap: 8px;
+                font-size: 13px;
+                font-weight: 600;
+            }
+            .steps span {
+                padding: 6px 12px;
+                border-radius: 99px;
+                background: var(--alt);
+                opacity: 0.6;
+            }
+            .steps span.on {
+                background: var(--pri);
+                color: var(--onp);
+                opacity: 1;
+            }
+            .bar {
+                background: var(--alt);
+                border-radius: 20px;
+                padding: 22px 28px;
+                margin-bottom: 20px;
+            }
+            h1,
+            h2 {
+                font-family: Fraunces, Georgia, serif;
+                font-weight: 500;
+                color: var(--title);
+                margin: 0;
+            }
+            h1 {
+                font-size: clamp(36px, 6vw, 60px);
+                line-height: 1.05;
+            }
+            h2 {
+                font-size: clamp(26px, 4vw, 34px);
+            }
+            .grid2 {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            .panel {
+                background: var(--alt);
+                border-radius: 24px;
+                padding: 28px;
+            }
+            .card {
+                background: var(--card);
+                border-radius: 18px;
+                padding: 22px;
+                border-top: 5px solid var(--pri);
+                box-shadow: 0 2px 10px rgba(15, 61, 62, 0.07);
+            }
+            .card h3 {
+                margin: 0 0 6px;
+                color: var(--title);
+            }
+            .card p {
+                margin: 0;
+                font-size: 15px;
+            }
+            .big {
+                font-size: 84px;
+                line-height: 1;
+                text-align: center;
+            }
+            .slogan {
+                font:
+                    italic 400 clamp(20px, 3vw, 28px)/1.4 Fraunces,
+                    Georgia,
+                    serif;
+                margin: 14px 0 26px;
+            }
+            .btn {
+                display: inline-block;
+                border: 0;
+                cursor: pointer;
+                background: var(--pri);
+                color: var(--onp);
+                font: 600 16px Inter;
+                padding: 14px 28px;
+                border-radius: 99px;
+            }
+            .btn.o {
+                background: none;
+                border: 2px solid var(--pri);
+                color: var(--pri);
+            }
+            .btn:disabled {
+                opacity: 0.35;
+                cursor: default;
+            }
+            .page {
+                display: none;
+            }
+            .page.on {
+                display: block;
+            }
+            .tabs {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin: 12px 0;
+            }
+            .tab {
+                border: 2px solid var(--pri);
+                background: none;
+                color: var(--pri);
+                padding: 8px 14px;
+                border-radius: 99px;
+                font: 600 14px Inter;
+                cursor: pointer;
+            }
+            .tab.on {
+                background: var(--pri);
+                color: var(--onp);
+            }
+            .cards3 {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
+                margin: 20px 0;
+            }
+            .cards3 .card:nth-child(2) {
+                border-color: var(--warn);
+            }
+            .cards3 .card:nth-child(3) {
+                border-color: var(--bad);
+            }
+            .foot {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 20px;
+            }
+            .choice {
+                display: block;
+                width: 100%;
+                text-align: left;
+                background: var(--card);
+                color: var(--text);
+                border: 2px solid transparent;
+                border-radius: 14px;
+                padding: 14px 16px;
+                margin-top: 10px;
+                font: 500 16px Inter;
+                cursor: pointer;
+            }
+            .choice:hover:not(:disabled) {
+                border-color: var(--pri);
+            }
+            .choice.ok {
+                border-color: var(--pri);
+                background: #d4efe5;
+                color: #0f3d3e;
+            }
+            .choice.ko {
+                border-color: var(--bad);
+                background: #fbe0e0;
+                color: #7a1f1f;
+            }
+            .qn {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--pri);
+                letter-spacing: 0.08em;
+            }
+            .fb {
+                font-weight: 600;
+                margin-bottom: 8px;
+            }
+            .fb.ok {
+                color: var(--pri);
+            }
+            .fb.ko {
+                color: var(--bad);
+            }
+            .dots {
+                display: flex;
+                gap: 8px;
+            }
+            .dots i {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: var(--alt);
+                border: 2px solid var(--pri);
+            }
+            .dots i.d {
+                background: var(--pri);
+            }
+            .ring {
+                width: 170px;
+                height: 170px;
+                border-radius: 50%;
+                margin: 0 auto 18px;
+                display: grid;
+                place-items: center;
+                font:
+                    500 44px Fraunces,
+                    serif;
+                color: var(--title);
+                background: conic-gradient(var(--c) calc(var(--p) * 1%), var(--card) 0);
+            }
+            .ring span {
+                width: 136px;
+                height: 136px;
+                border-radius: 50%;
+                background: var(--alt);
+                display: grid;
+                place-items: center;
+            }
+            @media (max-width: 760px) {
+                .grid2,
+                .cards3 {
+                    grid-template-columns: 1fr;
+                }
+                .steps span:not(.on) {
+                    display: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <header><div class="logo" onclick="go(0)">Assiette <b>Nette</b></div>
+                <div class="steps"><span>Accueil</span><span>Risques</span><span>QCM</span><span>Score</span></div></header>
+
+            <!-- PAGE 1 -->
+            <section class="page on">
+                <div class="bar" style="text-align:center"><h1>Assiette Nette</h1></div>
+                <div class="grid2">
+                    <div class="panel" style="display:grid;place-items:center;min-height:300px"><div class="big">🥗<br>🍽️</div></div>
+                    <div class="panel" style="display:flex;flex-direction:column;justify-content:center">
+                        <span class="qn">GUIDE DE SÉCURITÉ ALIMENTAIRE</span>
+                        <p class="slogan">Votre assiette en toute confiance.</p>
+                        <div><button class="btn" onclick="go(1)">Commencer →</button></div></div>
+                </div></section>
+
+            <!-- PAGE 2 -->
+            <section class="page">
+                <div class="bar"><h2>Intoxication et risque</h2></div>
+                <div class="grid2">
+                    <div class="panel" style="display:grid;place-items:center;min-height:240px;text-align:center"><div><div class="big">🦠</div><p style="margin:8px 0 0">Plus de 1 intoxication sur 2 se joue à la maison : chaîne du froid, cuisson, hygiène.</p></div></div>
+                    <div class="panel"><span class="qn">QUI EST LE PLUS EXPOSÉ ?</span>
+                        <div class="tabs" id="tabs"></div><p id="pers" style="margin:0"></p></div>
+                </div>
+                <div class="cards3">
+                    <div class="card"><h3>Salmonelle</h3><p>Œufs crus, volaille. Fièvre et diarrhée 6 à 72 h après le repas.</p></div>
+                    <div class="card"><h3>Listeria</h3><p>Fromages au lait cru, charcuterie. Grave pour la femme enceinte.</p></div>
+                    <div class="card"><h3>E. coli</h3><p>Viande hachée peu cuite. Peut être sévère chez l'enfant.</p></div>
+                </div>
+                <div class="foot"><button class="btn o" onclick="go(0)">← Retour</button><button class="btn" onclick="startQ()">Suivant : le QCM →</button></div>
+            </section>
+
+            <!-- PAGE 3 -->
+            <section class="page">
+                <div class="bar"><h2>QCM</h2></div>
+                <div class="grid2">
+                    <div class="panel"><div class="qn" id="qn"></div><h3 id="qt" style="font-size:21px;color:var(--title);margin:6px 0 4px"></h3><div id="qc"></div></div>
+                    <div class="panel" id="qa" style="display:flex;align-items:center;justify-content:center;text-align:center"><span style="opacity:.6">Choisissez une réponse pour voir l'explication.</span></div>
+                </div>
+                <div class="foot"><div class="dots" id="dots"></div><button class="btn" id="nx" onclick="next()" disabled>Question suivante →</button></div>
+            </section>
+
+            <!-- PAGE 4 -->
+            <section class="page">
+                <div class="bar"><h2>Votre score</h2></div>
+                <div class="panel" style="text-align:center;padding:36px 24px">
+                    <div class="ring" id="ring"><span id="sc"></span></div>
+                    <h2 id="mt"></h2><p id="mm" style="max-width:520px;margin:10px auto 24px"></p>
+                    <button class="btn" onclick="startQ()">Rejouer</button> <button class="btn o" onclick="go(1)">Revoir les risques</button>
+                </div></section>
+        </div>
+
+        <script>
+            const $ = (id) => document.getElementById(id),
+                pages = document.querySelectorAll(".page"),
+                st = document.querySelectorAll(".steps span");
+            function go(n) {
+                pages.forEach((p, i) => p.classList.toggle("on", i == n));
+                st.forEach((s, i) => s.classList.toggle("on", i == n));
+                scrollTo(0, 0);
+            }
+            go(0);
+            const P = [
+                [
+                    "👶 Enfants",
+                    "Défenses immunitaires immatures : la déshydratation arrive vite. Évitez œufs crus et viande peu cuite.",
+                ],
+                [
+                    "🤰 Femmes enceintes",
+                    "Listeria : évitez fromages au lait cru, charcuterie à la coupe et poissons fumés.",
+                ],
+                [
+                    "👵 Seniors",
+                    "Les symptômes peuvent être plus sévères. Surveillez l'hydratation et consultez tôt.",
+                ],
+                [
+                    "🩺 Fragiles",
+                    "Immunodéprimés ou malades chroniques : appliquez strictement la chaîne du froid.",
+                ],
+            ];
+            $("tabs").innerHTML = P.map(
+                (p, i) => `<button class="tab" onclick="pers(${i})">${p[0]}</button>`,
+            ).join("");
+            function pers(i) {
+                document
+                    .querySelectorAll(".tab")
+                    .forEach((t, j) => t.classList.toggle("on", i == j));
+                $("pers").textContent = P[i][1];
+            }
+            pers(0);
+            const Q = [
+                {
+                    q: "À quelle température maximale doit être réglé un réfrigérateur ?",
+                    c: ["4 °C", "8 °C", "12 °C"],
+                    a: 0,
+                    e: "4 °C limite la multiplication des bactéries. À 12 °C, elles prolifèrent très vite.",
+                },
+                {
+                    q: "Comment décongeler de la viande en sécurité ?",
+                    c: ["Sur le plan de travail", "Au réfrigérateur", "Dans l'eau chaude"],
+                    a: 1,
+                    e: "Au frigo, la température reste basse. À l'air ambiant, la surface devient tiède et les bactéries se multiplient.",
+                },
+                {
+                    q: "Pendant combien de temps se conservent des restes cuisinés au frigo ?",
+                    c: ["1 semaine", "Jusqu'à 3 jours", "10 jours"],
+                    a: 1,
+                    e: "Au-delà de 3 jours, le risque augmente même au froid. Refroidissez-les vite et couvrez-les.",
+                },
+                {
+                    q: "Quelle durée pour bien se laver les mains au savon ?",
+                    c: ["5 secondes", "Environ 30 secondes", "2 minutes"],
+                    a: 1,
+                    e: "Environ 30 secondes, en frottant paumes, doigts, pouces et ongles, élimine l'essentiel des germes.",
+                },
+                {
+                    q: "Quelle cuisson pour un steak haché ?",
+                    c: ["Saignant", "À peine saisi", "Bien cuit à cœur"],
+                    a: 2,
+                    e: "Le hachage mélange les germes de la surface à tout l'intérieur : il faut cuire à cœur (environ 70 °C).",
+                },
+            ];
+            let qi = 0,
+                score = 0,
+                done = false;
+            function startQ() {
+                qi = 0;
+                score = 0;
+                go(2);
+                rq();
+            }
+            function rq() {
+                const x = Q[qi];
+                done = false;
+                $("qn").textContent = `QUESTION ${qi + 1} / ${Q.length}`;
+                $("qt").textContent = x.q;
+                $("qc").innerHTML = x.c
+                    .map(
+                        (c, i) =>
+                            `<button class="choice" onclick="pick(${i})">${c}</button>`,
+                    )
+                    .join("");
+                $("qa").innerHTML =
+                    '<span style="opacity:.6">Choisissez une réponse pour voir l\'explication.</span>';
+                $("nx").disabled = true;
+                $("nx").textContent =
+                    qi == Q.length - 1 ? "Voir mon score →" : "Question suivante →";
+                $("dots").innerHTML = Q.map(
+                    (_, i) => `<i class="${i < qi ? "d" : ""}"></i>`,
+                ).join("");
+            }
+            function pick(i) {
+                if (done) return;
+                done = true;
+                const x = Q[qi],
+                    ok = i == x.a;
+                if (ok) score++;
+                document.querySelectorAll(".choice").forEach((b, j) => {
+                    b.disabled = true;
+                    if (j == x.a) b.classList.add("ok");
+                    else if (j == i) b.classList.add("ko");
+                });
+                $("qa").innerHTML =
+                    `<div><div class="fb ${ok ? "ok" : "ko"}">${ok ? "✓ Bonne réponse !" : "✗ Pas tout à fait"}</div><p style="margin:0">${x.e}</p></div>`;
+                $("nx").disabled = false;
+            }
+            function next() {
+                qi++;
+                qi < Q.length ? rq() : res();
+            }
+            function res() {
+                go(3);
+                const p = (score / Q.length) * 100,
+                    M =
+                        score <= 1
+                            ? [
+                                  "À revoir 🔴",
+                                  "Pas de panique : ces réflexes s'apprennent. Relisez la page des risques puis retentez le QCM.",
+                                  "var(--bad)",
+                              ]
+                            : score <= 3
+                              ? [
+                                    "Bon début 🟠",
+                                    "Vous avez les bases, mais quelques réflexes méritent d'être renforcés, notamment la chaîne du froid et la cuisson.",
+                                    "var(--warn)",
+                                ]
+                              : score == 4
+                                ? [
+                                      "Très bien 🟢",
+                                      "Presque parfait ! Il ne vous manque qu'un détail pour une cuisine vraiment sûre.",
+                                      "var(--pri)",
+                                  ]
+                                : [
+                                      "Assiette Nette ! 🏆",
+                                      "Sans faute : vous maîtrisez les bons réflexes. Partagez-les avec vos proches.",
+                                      "var(--pri)",
+                                  ];
+                $("ring").style.setProperty("--p", p);
+                $("ring").style.setProperty("--c", M[2]);
+                $("sc").textContent = `${score}/${Q.length}`;
+                $("mt").textContent = M[0];
+                $("mm").textContent = M[1];
+            }
+        </script>
+    </body>
+</html>
